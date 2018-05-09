@@ -85,8 +85,3 @@ print("Ошибок на обучающей | тестовой у лучших �
 
 print("Ошибок на обучающей | тестовой у полного набора:\t", errors_train[-1], '|', errors_test[-1])
 
-# intersection = intersect1d(minimums_train, minimums_test)
-# if intersection.size:
-#     print("Пересечение", intersection)
-#     best_column_set_mixed = features_list[intersection[0]]
-#     print("Лучший набор по тесту и обучению:\t", best_column_set_mixed)
