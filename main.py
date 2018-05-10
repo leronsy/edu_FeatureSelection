@@ -47,6 +47,7 @@ for length in range(1, dim + 1):
         errors_test[i] = np.count_nonzero(diff_test)
         i += 1
 
+print('Перебор из',i, 'наборов признаков.')
 minimums_train = np.where(errors_train == errors_train.min())
 minimums_test = np.where(errors_test == errors_test.min())
 
