@@ -6,9 +6,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import mean_squared_error
-
+import matplotlib.pyplot as plt
 from combinatorics import combinations_sum
-
 
 def classification_errors_counter(predicted, known):
     diff = predicted - known
@@ -72,7 +71,6 @@ for length in range(1, dim + 1):
 
 minimums_train = np.where(errors_train == errors_train.min())
 minimums_test = np.where(errors_test == errors_test.min())
-
 best_col_set_test = features_list[minimums_test[0][0]]
 columns_minimal_number = len(best_col_set_test)
 col_list = []
@@ -92,7 +90,9 @@ for i in minimums_test[0]:
 
 print("Лучшие наборы по тестам:\t")
 printlist(col_list)
-print("Ошибок на обучающей | тестовой у лучших наборов:\t", errors_train.min(), '|', errors_test.min())
-print("Ошибок на обучающей | тестовой у полного набора:\t", errors_train[-1], '|', errors_test[-1])
+print("Ошибок у лучших наборов на обучающей | тестовой:\t",
+      errors_train.min(), '|', errors_test.min())
+print("Ошибок у полного набора на обучающей | тестовой:\t",
+      errors_train[-1], '|', errors_test[-1])
 
 # np.set_printoptions(threshold=np.nan)
