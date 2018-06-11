@@ -2,7 +2,7 @@ import itertools as itt
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_wine, load_boston
+from sklearn.datasets import load_wine, load_boston, load_diabetes, make_regression, make_sparse_uncorrelated
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
@@ -29,13 +29,15 @@ def printlist(list_for_print):
     print("-" * 20)
 
 
-def main(dataset, classifier, error_function):
-    features, target = dataset(return_X_y=True)
+def main(features, target, classifier, error_function):
     clf = classifier
     err_fun = error_function
 
-    x_train, x_test, y_train, y_test = train_test_split(features, target, test_size=0.30)
-
+    x_train, x_test, y_train, y_test = train_test_split(features, target, test_size=0.30, random_state=10)
+    # x_train = features
+    # x_test = features
+    # y_train = target
+    # y_test = target
     dimension = features.shape[1]
     combinations_amount = combinations_sum(dimension) - 1
     combination_length_lst = [n for n in range(dimension)]
@@ -45,7 +47,7 @@ def main(dataset, classifier, error_function):
 
     print('Перебор из {0} наборов признаков.'.format(combinations_amount))
 
-    plt.figure(figsize=(6, 7), dpi=200)
+    plt.figure(figsize=(6, 10), dpi=300)
     min_by_len = np.zeros((2, dimension))
     features_lst = list()
     i = 0
@@ -84,17 +86,22 @@ def main(dataset, classifier, error_function):
         if len(lst) == columns_minimal_number:
             col_lst.append(lst)
 
+    plt.title('Полный перебор признаков')
+    plt.xlabel(col_lst)
     plt.legend(
-        ('min = ' + str("{0:3.2f} on {1:2d} p").format(errors_test.min(), len(best_col_set_test)),))
+        ('MSE test = ' + str("{0:3.6f} with {1:2d} features").format(errors_test.min(), len(best_col_set_test)),))
     plt.show()
-
     print("Лучшие минимальные наборы по тестам:\t")
     printlist(col_lst)
     print("Ошибки у наборов\t train | test")
-    print('{0:17s}\t{1:6.2f} |{2:5.2f}'.format("Лучшие", errors_train.min(), errors_test.min()))
-    print('{0:17s}\t{1:6.2f} |{2:5.2f}'.format("Полный", errors_train[-1], errors_test[-1]))
+    print('{0:22s}{1:6.2f} |{2:5.2f}'.format("Лучшие", errors_train.min(), errors_test.min()))
+    print('{0:22s}{1:6.2f} |{2:5.2f}'.format("Полный", errors_train[-1], errors_test[-1]))
 
 
 if __name__ == '__main__':
-    main(load_wine, GaussianNB(), classification_errors_counter)
-    # main(load_boston, LinearRegression(), compare_regression_mse)
+    # features = np.loadtxt('/mnt/INFO/projects/protein.csv',delimiter=',',usecols=np.arange(0,9), skiprows=1)
+    # target = np.loadtxt('/mnt/INFO/projects/protein.csv',delimiter=',',usecols=9, skiprows=1)
+    features, target = load_boston(return_X_y=True)
+    # features, target = make_sparse_uncorrelated(n_features=10, n_samples=2000)
+    # main(features, target, GaussianNB(), classification_errors_counter)
+    main(features, target, LinearRegression(), compare_regression_mse)
